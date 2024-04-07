@@ -40,11 +40,18 @@ export const CartListHolder: React.FC<{
     };
 
     const updatePrice = (product: TProduct, price: number, counter: number) => {
-        CartProductsList?.map((item: TProduct) => {
-            return (item.id == product.id) && (item.price = price * counter);
+        const list = [...CartProductsList]
+
+        list.forEach((item, index) => {
+            if (item.id == product.id) {
+                const updateItem = { ...item, price: price * counter }
+                list[index] = updateItem
+            }
         });
 
-        getTotalPrice();
+        dispatch(addToCartList(list));
+
+        getTotalPrice()
 
     }
 
@@ -59,7 +66,7 @@ export const CartListHolder: React.FC<{
         </div>
 
         <div className="holder-body">
-            {CartList.map((item: TProduct, index) => {
+            {CartProductsList?.length > 0 && CartProductsList?.map((item: TProduct, index) => {
                 return <CartItem updatePrice={updatePrice} Product={item} key={index} removeItem={removeItem} />
             })}
         </div>
